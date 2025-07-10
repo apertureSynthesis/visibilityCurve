@@ -1,0 +1,7 @@
+visibilityCurve - a python package for plotting ALMA comet data
+
+Installation: Recommend creating a virtual environment with manager of your choice.
+
+Required: python 3.10 for installation of casatools.
+
+pip install -r requirements.txt
