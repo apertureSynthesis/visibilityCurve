@@ -5,7 +5,7 @@ import matplotlib
 
 class visibilityCurve(object):
 
-    def __init__(self,obsVis,parentVis,daughterVis,binWid,binOffset,lpString,titleString,tp=None,tpe=None,uvmax=None):
+    def __init__(self,obsVis,parentVis,daughterVis,binWid,binOffset,lpString,titleString,figName,tp=None,tpe=None,uvmax=None):
         self.obsVis = obsVis
         self.parentVis = parentVis
         self.daughterVis = daughterVis
@@ -13,6 +13,7 @@ class visibilityCurve(object):
         self.binOffset = binOffset
         self.lpString = lpString
         self.titleString = titleString
+        self.figName = figName
         self.tp = tp
         self.tpe = tpe
         self.uvmax = uvmax
@@ -123,5 +124,5 @@ class visibilityCurve(object):
         ax.legend(h,l,fontsize=20)
 
         plt.tight_layout()
-        plt.savefig('K2.jpg')
+        plt.savefig(figName)
         plt.show()
