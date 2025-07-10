@@ -1,0 +1,7 @@
+numpy
+scipy
+jupyter
+ipython
+pylint
+casatools
+casadata
