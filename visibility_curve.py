@@ -2,6 +2,7 @@ import numpy as np
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 import matplotlib
+from visibilityCurve.vis_sample import import_data_ms
 
 class visibilityCurve(object):
 
@@ -124,5 +125,5 @@ class visibilityCurve(object):
         ax.legend(h,l,fontsize=20)
 
         plt.tight_layout()
-        plt.savefig(figName)
+        plt.savefig(self.figName)
         plt.show()
