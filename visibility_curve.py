@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
-import matplotlib
 from visibilityCurve.vis_sample import import_data_ms
 
 class visibilityCurve(object):
@@ -98,12 +97,6 @@ class visibilityCurve(object):
         dInterp *= self.dv * len(datachans)
 
         fig, ax = plt.subplots(figsize=(10,10))
-
-        #Set some plotting options
-        matplotlib.rcParams['font.family'] = 'Times New Roman'
-        matplotlib.rcParams['mathtext.default'] = 'regular'
-        matplotlib.rcParams['font.weight'] = 'bold'
-        matplotlib.rcParams['axes.labelweight'] = 'bold'
 
         ax.errorbar(uvsBinned, reBinned, yerr=yerrs, linestyle=' ',marker='o',markersize=8,elinewidth=1.5,ecolor='k',
                     capsize=5,label='Observed')
