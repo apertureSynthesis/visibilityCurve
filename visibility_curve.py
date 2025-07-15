@@ -25,7 +25,7 @@ class visibilityCurve(object):
     Outputs:
     a plot showing the observed and modeled binned visibilities with labels
     """
-    def __init__(self,obsVis,parentVis,daughterVis,binWid,binOffset,lpString,titleString,figName,tp=None,tpe=None,uvmax=None):
+    def __init__(self,obsVis,parentVis,daughterVis,binWid,binOffset,lpString,titleString,figName,chan1=None,chan2=None,tp=None,tpe=None,uvmax=None):
         self.obsVis = obsVis
         self.parentVis = parentVis
         self.daughterVis = daughterVis
@@ -34,6 +34,8 @@ class visibilityCurve(object):
         self.lpString = lpString
         self.titleString = titleString
         self.figName = figName
+        self.chan1 = chan1
+        self.chan2 = chan2
         self.tp = tp
         self.tpe = tpe
         self.uvmax = uvmax
@@ -46,6 +48,7 @@ class visibilityCurve(object):
         vis = import_data_ms(file)
         self.f0 = 0.5 * (vis.freqs[-1] + vis.freqs[0])[0]
         self.dv = self.c * np.abs((vis.freqs[1] - vis.freqs[0])/self.f0) / 1000.
+        print(self.dv,self.f0/1e9)
         #Real part of the visibilities
         re = np.squeeze(np.real(vis.VV))
         #Measured noise on visibilities
@@ -77,7 +80,7 @@ class visibilityCurve(object):
                 if len(re.shape) < 2:
                     yerrs.append(1.29/np.sum(1/rms[binInds==i]**2)**0.5)
                 else:
-                    yerrs.append(1.29/np.sum((len(chans))/rms[binInds==i]**2)**0.5)     
+                    yerrs.append(1.29/np.sum((len(np.where(chans==True)[0]))/rms[binInds==i]**2)**0.5)     
 
         reBinned = []
         for i in range(len(bins)):
@@ -95,7 +98,11 @@ class visibilityCurve(object):
 
         # Get channels that contain data
         presum = np.sum(pre,axis=0)
-        datachans = presum > 0.1
+        if self.chan1 == None:
+            datachans = presum > 0.1
+        else:
+            datachans = np.full(len(presum), False)
+            datachans[self.chan1:self.chan2+1] = True
 
         #Bin them and then integrate from Jy to Jy km/s
         uvBinned, reBinned, yerrs = self.binVis(uv, re, rms, datachans)
@@ -117,12 +124,14 @@ class visibilityCurve(object):
         uvsInterp = [i / (1e3*self.c/(self.f0)) for i in uvInterp]
 
         #Integrate everything
-        reBinned *= self.dv * len(datachans)
-        yerrs *= self.dv * len(datachans)
-        preBinned *= self.dv * len(datachans)
-        dreBinned *= self.dv * len(datachans)
-        pInterp *= self.dv * len(datachans)
-        dInterp *= self.dv * len(datachans)
+        nchan = len(np.where(datachans==True)[0])
+        print(nchan)
+        reBinned *= self.dv * nchan
+        yerrs *= self.dv * nchan
+        preBinned *= self.dv * nchan
+        dreBinned *= self.dv * nchan
+        pInterp *= self.dv * nchan
+        dInterp *= self.dv * nchan
 
         #Make the figure
         fig, ax = plt.subplots(figsize=(10,10))
